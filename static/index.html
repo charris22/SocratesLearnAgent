@@ -4,70 +4,191 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Owen's Learn Agent</title>
+
+  <!-- KaTeX for math rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+
+  <!-- Marked for markdown -->
+  <script src="https://cdn.jsdelivr.net/npm/marked@15.0.0/marked.min.js"></script>
+
   <link rel="stylesheet" href="/static/style.css" />
 </head>
 <body>
   <div id="app">
-    <!-- Navigation -->
-    <nav class="navbar">
-      <h1 class="logo">&#x1F393; Owen's Learn Agent</h1>
-      <div class="nav-tabs">
-        <button class="tab active" data-tab="chat">Chat</button>
-        <button class="tab" data-tab="quiz">Quiz</button>
-        <button class="tab" data-tab="progress">Progress</button>
-      </div>
-    </nav>
 
-    <!-- Chat Tab -->
-    <section id="chat" class="panel active">
-      <div class="chat-header">
-        <label>Subject:
-          <input id="subject" type="text" placeholder="e.g. Math, Science, History" />
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <span class="brand-icon">&#x1F9EE;</span>
+        <h1>Owen's<br/>Learn Agent</h1>
+      </div>
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-tab="chat">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Tutor Chat
+        </button>
+        <button class="nav-item" data-tab="quiz">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Quiz
+        </button>
+        <button class="nav-item" data-tab="scratchpad">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.827 2.827 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+          Scratch Pad
+        </button>
+        <button class="nav-item" data-tab="progress">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+          Progress
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <label class="subject-label">
+          <span>Subject</span>
+          <select id="subject">
+            <option value="Math" selected>Math</option>
+            <option value="Algebra">Algebra</option>
+            <option value="Geometry">Geometry</option>
+            <option value="Calculus">Calculus</option>
+            <option value="Statistics">Statistics</option>
+            <option value="Physics">Physics</option>
+          </select>
         </label>
-        <button id="clear-chat" class="btn-small">New Chat</button>
+        <input id="student-id" type="hidden" value="default" />
       </div>
-      <div id="messages" class="messages"></div>
-      <form id="chat-form" class="chat-input">
-        <input id="user-input" type="text" placeholder="Ask your tutor a question..." autocomplete="off" />
-        <button type="submit" class="btn-primary">Send</button>
-      </form>
-    </section>
+    </aside>
 
-    <!-- Quiz Tab -->
-    <section id="quiz" class="panel">
-      <div class="quiz-setup">
-        <h2>Generate a Quiz</h2>
-        <div class="form-row">
-          <label>Subject <input id="quiz-subject" type="text" placeholder="Math" /></label>
-          <label>Topic <input id="quiz-topic" type="text" placeholder="Fractions" /></label>
-        </div>
-        <div class="form-row">
-          <label>Questions
-            <input id="quiz-count" type="number" value="5" min="1" max="20" />
-          </label>
-          <label>Difficulty
-            <select id="quiz-difficulty">
-              <option value="easy">Easy</option>
-              <option value="medium" selected>Medium</option>
-              <option value="hard">Hard</option>
-            </select>
-          </label>
-        </div>
-        <button id="generate-quiz" class="btn-primary">Generate Quiz</button>
-      </div>
-      <div id="quiz-container" class="quiz-container hidden"></div>
-      <div id="quiz-results" class="quiz-results hidden"></div>
-    </section>
+    <!-- Main Content -->
+    <main class="content">
 
-    <!-- Progress Tab -->
-    <section id="progress" class="panel">
-      <h2>Your Progress</h2>
-      <div class="form-row">
-        <label>Student ID <input id="student-id" type="text" value="default" /></label>
-        <button id="load-progress" class="btn-primary">Load</button>
-      </div>
-      <div id="progress-content"></div>
-    </section>
+      <!-- ── Chat Tab ──────────────────────────────────── -->
+      <section id="chat" class="panel active">
+        <header class="panel-header">
+          <div>
+            <h2>Math Tutor</h2>
+            <p class="panel-subtitle">Ask me anything — I'll walk you through it step by step</p>
+          </div>
+          <button id="clear-chat" class="btn-ghost" title="New Chat">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+            New Chat
+          </button>
+        </header>
+
+        <div id="messages" class="messages">
+          <div class="welcome-card">
+            <div class="welcome-icon">&#x1F44B;</div>
+            <h3>Welcome!</h3>
+            <p>I'm your math tutor. Try asking me something like:</p>
+            <div class="suggestion-chips">
+              <button class="chip" data-msg="Explain how to solve systems of equations">Systems of equations</button>
+              <button class="chip" data-msg="What is the quadratic formula and how do I use it?">Quadratic formula</button>
+              <button class="chip" data-msg="Help me understand fractions and how to add them">Adding fractions</button>
+              <button class="chip" data-msg="Explain the Pythagorean theorem with examples">Pythagorean theorem</button>
+            </div>
+          </div>
+        </div>
+
+        <form id="chat-form" class="chat-input-bar">
+          <div class="input-wrapper">
+            <textarea id="user-input" rows="1" placeholder="Type your math question… (Shift+Enter for new line)" autocomplete="off"></textarea>
+            <button type="submit" class="send-btn" title="Send">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
+          <span class="input-hint">Press <kbd>Enter</kbd> to send &middot; <kbd>Shift+Enter</kbd> for new line &middot; LaTeX math rendered automatically</span>
+        </form>
+      </section>
+
+      <!-- ── Quiz Tab ──────────────────────────────────── -->
+      <section id="quiz" class="panel">
+        <header class="panel-header">
+          <div>
+            <h2>Math Quiz</h2>
+            <p class="panel-subtitle">Test your knowledge with AI-generated questions</p>
+          </div>
+        </header>
+
+        <div class="quiz-setup-card">
+          <div class="quiz-form-grid">
+            <label class="field">
+              <span>Topic</span>
+              <input id="quiz-topic" type="text" placeholder="e.g. Fractions, Quadratics" />
+            </label>
+            <label class="field">
+              <span># Questions</span>
+              <input id="quiz-count" type="number" value="5" min="1" max="20" />
+            </label>
+            <label class="field">
+              <span>Difficulty</span>
+              <div class="difficulty-pills">
+                <input type="radio" name="diff" id="diff-easy" value="easy" />
+                <label for="diff-easy" class="pill">Easy</label>
+                <input type="radio" name="diff" id="diff-medium" value="medium" checked />
+                <label for="diff-medium" class="pill">Medium</label>
+                <input type="radio" name="diff" id="diff-hard" value="hard" />
+                <label for="diff-hard" class="pill">Hard</label>
+              </div>
+            </label>
+          </div>
+          <button id="generate-quiz" class="btn-primary btn-lg">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Generate Quiz
+          </button>
+        </div>
+
+        <div id="quiz-container" class="quiz-container hidden"></div>
+        <div id="quiz-scoreboard" class="quiz-scoreboard hidden"></div>
+      </section>
+
+      <!-- ── Scratch Pad ───────────────────────────────── -->
+      <section id="scratchpad" class="panel">
+        <header class="panel-header">
+          <div>
+            <h2>Scratch Pad</h2>
+            <p class="panel-subtitle">Draw, sketch, and work out problems by hand</p>
+          </div>
+          <div class="pad-tools">
+            <button class="tool-btn active" data-tool="pen" title="Pen">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.827 2.827 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+            </button>
+            <button class="tool-btn" data-tool="eraser" title="Eraser">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 20H7L3 16l9-9 8 8-4 4z"/><path d="M6 11l8 8"/></svg>
+            </button>
+            <span class="tool-sep"></span>
+            <input type="color" id="pen-color" value="#6c63ff" class="color-pick" title="Color" />
+            <input type="range" id="pen-size" min="1" max="16" value="3" class="size-slider" title="Brush size" />
+            <span class="tool-sep"></span>
+            <button class="tool-btn" data-tool="undo" title="Undo">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+            </button>
+            <button class="tool-btn" data-tool="clear" title="Clear canvas">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            </button>
+          </div>
+        </header>
+        <div class="canvas-wrap">
+          <canvas id="scratch-canvas"></canvas>
+        </div>
+      </section>
+
+      <!-- ── Progress Tab ──────────────────────────────── -->
+      <section id="progress" class="panel">
+        <header class="panel-header">
+          <div>
+            <h2>Your Progress</h2>
+            <p class="panel-subtitle">Track your learning journey across topics</p>
+          </div>
+          <button id="load-progress" class="btn-ghost">Refresh</button>
+        </header>
+        <div id="progress-content" class="progress-content">
+          <div class="empty-state">
+            <div class="empty-icon">&#x1F4CA;</div>
+            <p>No progress yet — take a quiz to get started!</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
   </div>
 
   <script src="/static/app.js"></script>
