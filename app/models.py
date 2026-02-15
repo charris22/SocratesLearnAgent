@@ -1,6 +1,6 @@
 """Pydantic models for the tutoring agent domain."""
 
-from datetime import datetime
+from datetime import UTC, datetime
 from enum import Enum
 from uuid import uuid4
 
@@ -18,7 +18,7 @@ class Role(str, Enum):
 class ChatMessage(BaseModel):
     role: Role
     content: str
-    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
 
 class ChatRequest(BaseModel):
@@ -89,7 +89,7 @@ class StudentProfile(BaseModel):
     student_id: str = Field(default_factory=lambda: uuid4().hex)
     name: str = "Student"
     scores: dict[str, TopicScore] = Field(default_factory=dict)  # key = "subject::topic"
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
     def topic_key(self, subject: str, topic: str) -> str:
         return f"{subject}::{topic}"

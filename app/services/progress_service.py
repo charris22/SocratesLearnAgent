@@ -2,7 +2,7 @@
 
 import json
 import logging
-from datetime import datetime
+from datetime import UTC, datetime
 
 from app.azure_client import get_openai_client
 from app.config import get_settings
@@ -29,7 +29,7 @@ def record_answer(student_id: str, subject: str, topic: str, correct: bool) -> T
     score.attempts += 1
     if correct:
         score.correct += 1
-    score.last_attempt = datetime.utcnow()
+    score.last_attempt = datetime.now(UTC)
     return score
 
 
