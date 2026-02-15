@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Owen's Learn Agent</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- Navigation -->
+    <nav class="navbar">
+      <h1 class="logo">&#x1F393; Owen's Learn Agent</h1>
+      <div class="nav-tabs">
+        <button class="tab active" data-tab="chat">Chat</button>
+        <button class="tab" data-tab="quiz">Quiz</button>
+        <button class="tab" data-tab="progress">Progress</button>
+      </div>
+    </nav>
+
+    <!-- Chat Tab -->
+    <section id="chat" class="panel active">
+      <div class="chat-header">
+        <label>Subject:
+          <input id="subject" type="text" placeholder="e.g. Math, Science, History" />
+        </label>
+        <button id="clear-chat" class="btn-small">New Chat</button>
+      </div>
+      <div id="messages" class="messages"></div>
+      <form id="chat-form" class="chat-input">
+        <input id="user-input" type="text" placeholder="Ask your tutor a question..." autocomplete="off" />
+        <button type="submit" class="btn-primary">Send</button>
+      </form>
+    </section>
+
+    <!-- Quiz Tab -->
+    <section id="quiz" class="panel">
+      <div class="quiz-setup">
+        <h2>Generate a Quiz</h2>
+        <div class="form-row">
+          <label>Subject <input id="quiz-subject" type="text" placeholder="Math" /></label>
+          <label>Topic <input id="quiz-topic" type="text" placeholder="Fractions" /></label>
+        </div>
+        <div class="form-row">
+          <label>Questions
+            <input id="quiz-count" type="number" value="5" min="1" max="20" />
+          </label>
+          <label>Difficulty
+            <select id="quiz-difficulty">
+              <option value="easy">Easy</option>
+              <option value="medium" selected>Medium</option>
+              <option value="hard">Hard</option>
+            </select>
+          </label>
+        </div>
+        <button id="generate-quiz" class="btn-primary">Generate Quiz</button>
+      </div>
+      <div id="quiz-container" class="quiz-container hidden"></div>
+      <div id="quiz-results" class="quiz-results hidden"></div>
+    </section>
+
+    <!-- Progress Tab -->
+    <section id="progress" class="panel">
+      <h2>Your Progress</h2>
+      <div class="form-row">
+        <label>Student ID <input id="student-id" type="text" value="default" /></label>
+        <button id="load-progress" class="btn-primary">Load</button>
+      </div>
+      <div id="progress-content"></div>
+    </section>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
