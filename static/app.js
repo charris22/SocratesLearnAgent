@@ -29,20 +29,51 @@ function renderContent(raw) {
   return tmp.innerHTML;
 }
 
-/* ── Tab navigation ───────────────────────────────────── */
+/* ── Tab navigation & drawer system ───────────────────── */
+const drawerOverlay = document.getElementById('drawer-overlay');
+const drawers = document.querySelectorAll('.drawer');
+
+function closeDrawers() {
+  drawers.forEach(d => d.classList.remove('open'));
+  drawerOverlay.classList.remove('visible');
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  document.querySelector('.nav-item[data-tab="chat"]').classList.add('active');
+}
+
 document.querySelectorAll('.nav-item').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-    btn.classList.add('active');
-    const panel = document.getElementById(btn.dataset.tab);
-    panel.classList.add('active');
+    const tab = btn.dataset.tab;
 
-    // Resize canvas when switching to scratchpad
-    if (btn.dataset.tab === 'scratchpad') resizeCanvas();
-    // Auto-load progress
-    if (btn.dataset.tab === 'progress') loadProgress();
+    if (tab === 'chat') {
+      closeDrawers();
+      return;
+    }
+
+    const drawer = document.getElementById(tab);
+    const isOpen = drawer.classList.contains('open');
+
+    // Close all drawers first
+    drawers.forEach(d => d.classList.remove('open'));
+
+    if (!isOpen) {
+      drawer.classList.add('open');
+      drawerOverlay.classList.add('visible');
+      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      if (tab === 'scratchpad') setTimeout(resizeCanvas, 350);
+      if (tab === 'progress') loadProgress();
+    } else {
+      closeDrawers();
+    }
   });
+});
+
+// Close drawer on overlay click
+drawerOverlay.addEventListener('click', closeDrawers);
+
+// Close buttons inside drawers
+document.querySelectorAll('.drawer-close').forEach(btn => {
+  btn.addEventListener('click', closeDrawers);
 });
 
 /* ═════════════════════════════════════════════════════════
