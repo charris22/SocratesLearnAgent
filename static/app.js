@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════
-   Owen's Learn Agent – Application Logic
+   Socrates – Application Logic
    ═══════════════════════════════════════════════════════════ */
 
 const API = '';
@@ -76,6 +76,24 @@ document.querySelectorAll('.drawer-close').forEach(btn => {
   btn.addEventListener('click', closeDrawers);
 });
 
+/* ── Sidebar collapse ─────────────────────────────────── */
+const sidebar = document.getElementById('sidebar');
+const sidebarToggle = document.getElementById('sidebar-toggle');
+
+sidebarToggle.addEventListener('click', () => {
+  sidebar.classList.toggle('collapsed');
+});
+
+/* ── Dynamic subject title ────────────────────────────── */
+const chatTitle = document.getElementById('chat-title');
+const quizTitle = document.getElementById('quiz-title');
+
+function updateTitles() {
+  const subj = subjectInput.value || 'Math';
+  chatTitle.textContent = `${subj} Tutor`;
+  quizTitle.textContent = `${subj} Quiz`;
+}
+
 /* ═════════════════════════════════════════════════════════
    CHAT
    ═════════════════════════════════════════════════════════ */
@@ -83,6 +101,10 @@ const chatForm = document.getElementById('chat-form');
 const userInput = document.getElementById('user-input');
 const messagesEl = document.getElementById('messages');
 const subjectInput = document.getElementById('subject');
+
+// Update titles when subject changes
+subjectInput.addEventListener('change', updateTitles);
+updateTitles();
 
 // Auto-resize textarea
 userInput.addEventListener('input', () => {
@@ -143,9 +165,11 @@ document.getElementById('clear-chat').addEventListener('click', async () => {
   await fetch(`${API}/api/chat/${sessionId}`, { method: 'DELETE' });
   messagesEl.innerHTML = `
     <div class="welcome-card">
-      <div class="welcome-icon">&#x1F44B;</div>
-      <h3>Welcome!</h3>
-      <p>I'm your math tutor. Try asking me something like:</p>
+      <div class="welcome-icon">
+        <svg width="48" height="48" viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="14" fill="var(--primary)"/><g stroke="var(--primary)" stroke-width="3" stroke-linecap="round"><line x1="32" y1="4" x2="32" y2="14"/><line x1="32" y1="50" x2="32" y2="60"/><line x1="4" y1="32" x2="14" y2="32"/><line x1="50" y1="32" x2="60" y2="32"/><line x1="12.2" y1="12.2" x2="19.4" y2="19.4"/><line x1="44.6" y1="44.6" x2="51.8" y2="51.8"/><line x1="51.8" y1="12.2" x2="44.6" y2="19.4"/><line x1="19.4" y1="44.6" x2="12.2" y2="51.8"/></g></svg>
+      </div>
+      <h3>Welcome to Socrates!</h3>
+      <p>I'm your tutor. Try asking me something like:</p>
       <div class="suggestion-chips">
         <button class="chip" data-msg="Explain how to solve systems of equations">Systems of equations</button>
         <button class="chip" data-msg="What is the quadratic formula and how do I use it?">Quadratic formula</button>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Owen's Learn Agent</title>
+  <title>Socrates</title>
 
   <!-- KaTeX for math rendering -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" />
@@ -19,27 +19,42 @@
   <div id="app">
 
     <!-- Sidebar Navigation -->
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
       <div class="sidebar-brand">
-        <span class="brand-icon">&#x1F9EE;</span>
-        <h1>Owen's<br/>Learn Agent</h1>
+        <svg class="brand-icon" width="32" height="32" viewBox="0 0 64 64" fill="none">
+          <circle cx="32" cy="32" r="14" fill="#fff"/>
+          <g stroke="#fff" stroke-width="3" stroke-linecap="round">
+            <line x1="32" y1="4" x2="32" y2="14"/>
+            <line x1="32" y1="50" x2="32" y2="60"/>
+            <line x1="4" y1="32" x2="14" y2="32"/>
+            <line x1="50" y1="32" x2="60" y2="32"/>
+            <line x1="12.2" y1="12.2" x2="19.4" y2="19.4"/>
+            <line x1="44.6" y1="44.6" x2="51.8" y2="51.8"/>
+            <line x1="51.8" y1="12.2" x2="44.6" y2="19.4"/>
+            <line x1="19.4" y1="44.6" x2="12.2" y2="51.8"/>
+          </g>
+        </svg>
+        <h1 class="brand-text">S<svg class="brand-o" width="14" height="14" viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="14" fill="#fff"/><g stroke="#fff" stroke-width="4" stroke-linecap="round"><line x1="32" y1="6" x2="32" y2="15"/><line x1="32" y1="49" x2="32" y2="58"/><line x1="6" y1="32" x2="15" y2="32"/><line x1="49" y1="32" x2="58" y2="32"/><line x1="13.6" y1="13.6" x2="19.8" y2="19.8"/><line x1="44.2" y1="44.2" x2="50.4" y2="50.4"/><line x1="50.4" y1="13.6" x2="44.2" y2="19.8"/><line x1="19.8" y1="44.2" x2="13.6" y2="50.4"/></g></svg>crates</h1>
       </div>
+      <button id="sidebar-toggle" class="sidebar-toggle" title="Collapse sidebar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
       <nav class="sidebar-nav">
         <button class="nav-item active" data-tab="chat">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          Tutor Chat
+          <span>Tutor Chat</span>
         </button>
         <button class="nav-item" data-tab="quiz">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          Quiz
+          <span>Quiz</span>
         </button>
         <button class="nav-item" data-tab="scratchpad">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.827 2.827 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
-          Scratch Pad
+          <span>Scratch Pad</span>
         </button>
         <button class="nav-item" data-tab="progress">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
-          Progress
+          <span>Progress</span>
         </button>
       </nav>
       <div class="sidebar-footer">
@@ -65,8 +80,8 @@
       <section id="chat" class="panel active">
         <header class="panel-header">
           <div>
-            <h2>Math Tutor</h2>
-            <p class="panel-subtitle">Ask me anything — I'll walk you through it step by step</p>
+            <h2 id="chat-title">Tutor</h2>
+            <p class="panel-subtitle">Ask Socrates anything — I'll walk you through it step by step</p>
           </div>
           <button id="clear-chat" class="btn-ghost" title="New Chat">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
@@ -76,9 +91,11 @@
 
         <div id="messages" class="messages">
           <div class="welcome-card">
-            <div class="welcome-icon">&#x1F44B;</div>
-            <h3>Welcome!</h3>
-            <p>I'm your math tutor. Try asking me something like:</p>
+            <div class="welcome-icon">
+              <svg width="48" height="48" viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="14" fill="var(--primary)"/><g stroke="var(--primary)" stroke-width="3" stroke-linecap="round"><line x1="32" y1="4" x2="32" y2="14"/><line x1="32" y1="50" x2="32" y2="60"/><line x1="4" y1="32" x2="14" y2="32"/><line x1="50" y1="32" x2="60" y2="32"/><line x1="12.2" y1="12.2" x2="19.4" y2="19.4"/><line x1="44.6" y1="44.6" x2="51.8" y2="51.8"/><line x1="51.8" y1="12.2" x2="44.6" y2="19.4"/><line x1="19.4" y1="44.6" x2="12.2" y2="51.8"/></g></svg>
+            </div>
+            <h3>Welcome to S<svg class="welcome-o" width="16" height="16" viewBox="0 0 64 64" fill="none"><circle cx="32" cy="32" r="14" fill="var(--primary)"/><g stroke="var(--primary)" stroke-width="4" stroke-linecap="round"><line x1="32" y1="6" x2="32" y2="15"/><line x1="32" y1="49" x2="32" y2="58"/><line x1="6" y1="32" x2="15" y2="32"/><line x1="49" y1="32" x2="58" y2="32"/><line x1="13.6" y1="13.6" x2="19.8" y2="19.8"/><line x1="44.2" y1="44.2" x2="50.4" y2="50.4"/><line x1="50.4" y1="13.6" x2="44.2" y2="19.8"/><line x1="19.8" y1="44.2" x2="13.6" y2="50.4"/></g></svg>crates!</h3>
+            <p>I'm your tutor. Try asking me something like:</p>
             <div class="suggestion-chips">
               <button class="chip" data-msg="Explain how to solve systems of equations">Systems of equations</button>
               <button class="chip" data-msg="What is the quadratic formula and how do I use it?">Quadratic formula</button>
@@ -103,7 +120,7 @@
       <section id="quiz" class="panel drawer">
         <header class="panel-header">
           <div>
-            <h2>Math Quiz</h2>
+            <h2 id="quiz-title">Quiz</h2>
             <p class="panel-subtitle">Test your knowledge with AI-generated questions</p>
           </div>
           <button class="drawer-close" title="Close">&times;</button>
