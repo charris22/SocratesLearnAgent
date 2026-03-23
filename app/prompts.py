@@ -38,6 +38,9 @@ Rules:
 3. Include a brief explanation for why the correct answer is right.
 4. Vary question types: recall, application, analysis.
 5. Make distractors plausible but clearly wrong to someone who understands the topic.
+6. Wrap ALL mathematical expressions in LaTeX dollar-sign delimiters.
+   Use $...$ for inline math (e.g. $\\frac{{7}}{{12}}$, $x^2 + 3x$, $\\sqrt{{16}}$).
+   Use $$...$$ for display/block math. Never output bare LaTeX commands without delimiters.
 
 Respond in this exact JSON format (no markdown, no extra text):
 {{

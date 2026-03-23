@@ -6,9 +6,28 @@ const API = '';
 let sessionId = crypto.randomUUID().replace(/-/g, '');
 
 /* ── Markdown + KaTeX renderer ────────────────────────── */
+
+// Safety net: wrap bare LaTeX commands in $...$ so KaTeX can find them
+function wrapBareLatex(text) {
+  // Match common LaTeX commands not already inside $ or \( delimiters
+  return text.replace(
+    /(?<![\$\\(])\\(frac|sqrt|sum|prod|int|lim|infty|alpha|beta|gamma|delta|theta|pi|sigma|omega|times|div|pm|mp|cdot|leq|geq|neq|approx|equiv|binom|log|ln|sin|cos|tan|sec|csc|cot)\b([^$]*?)(?=[,.)\s]|$)/g,
+    (match, cmd, rest, offset, string) => {
+      // Don't wrap if already inside a $ delimiter
+      const before = string.slice(0, offset);
+      const dollars = (before.match(/\$/g) || []).length;
+      if (dollars % 2 === 1) return match; // inside $...$
+      return `$${match.trim()}$`;
+    }
+  );
+}
+
 function renderContent(raw) {
+  // Step 0: Wrap any bare LaTeX commands in $ delimiters
+  const wrapped = wrapBareLatex(raw);
+
   // Step 1: Parse markdown
-  const html = marked.parse(raw, { breaks: true, gfm: true });
+  const html = marked.parse(wrapped, { breaks: true, gfm: true });
 
   // Step 2: Insert into a temp container so KaTeX auto-render works
   const tmp = document.createElement('div');
