@@ -15,6 +15,7 @@ dependencies = [
     "jinja2>=3.1.0",
     "aiofiles>=24.1.0",
     "python-dotenv>=1.0.1",
+    "aiosqlite>=0.20.0",
 ]
 
 [project.optional-dependencies]

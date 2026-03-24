@@ -56,6 +56,22 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
           <span>Progress</span>
         </button>
+        <button class="nav-item" data-tab="robotics">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3h6"/><path d="M12 3v4"/><rect x="4" y="7" width="16" height="11" rx="3"/><path d="M9 22h6"/><path d="M8 11h.01"/><path d="M16 11h.01"/><path d="M12 15h.01"/></svg>
+          <span>Robotics</span>
+        </button>
+        <button class="nav-item" data-tab="reading-writing">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 0 4 24V4.5A2.5 2.5 0 0 1 6.5 2Z"/></svg>
+          <span>Reading &amp; Writing</span>
+        </button>
+        <button class="nav-item" data-tab="worksheets">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          <span>Worksheets</span>
+        </button>
+        <button class="nav-item" data-tab="profile">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>Profile</span>
+        </button>
       </nav>
       <div class="sidebar-footer">
         <label class="subject-label">
@@ -66,7 +82,10 @@
             <option value="Geometry">Geometry</option>
             <option value="Calculus">Calculus</option>
             <option value="Statistics">Statistics</option>
+            <option value="Science">Science</option>
             <option value="Physics">Physics</option>
+            <option value="Robotics">Robotics</option>
+            <option value="Reading &amp; Writing">Reading &amp; Writing</option>
           </select>
         </label>
         <input id="student-id" type="hidden" value="default" />
@@ -107,12 +126,18 @@
 
         <form id="chat-form" class="chat-input-bar">
           <div class="input-wrapper">
-            <textarea id="user-input" rows="1" placeholder="Type your math question… (Shift+Enter for new line)" autocomplete="off"></textarea>
+            <button type="button" id="mic-btn" class="voice-btn mic-btn" title="Voice input (hold or click to record)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            </button>
+            <textarea id="user-input" rows="1" placeholder="Type or speak your question…" autocomplete="off"></textarea>
+            <button type="button" id="auto-speak-btn" class="voice-btn speak-toggle" title="Toggle auto-speak responses">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+            </button>
             <button type="submit" class="send-btn" title="Send">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
             </button>
           </div>
-          <span class="input-hint">Press <kbd>Enter</kbd> to send &middot; <kbd>Shift+Enter</kbd> for new line &middot; LaTeX math rendered automatically</span>
+          <span class="input-hint">Press <kbd>Enter</kbd> to send &middot; <kbd>Shift+Enter</kbd> for new line &middot; Click <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:-1px"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg> for voice</span>
         </form>
       </section>
 
@@ -123,6 +148,7 @@
             <h2 id="quiz-title">Quiz</h2>
             <p class="panel-subtitle">Test your knowledge with AI-generated questions</p>
           </div>
+          <button class="drawer-expand" title="Expand">&#x26F6;</button>
           <button class="drawer-close" title="Close">&times;</button>
         </header>
 
@@ -183,6 +209,7 @@
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
             </button>
           </div>
+          <button class="drawer-expand" title="Expand">&#x26F6;</button>
           <button class="drawer-close" title="Close">&times;</button>
         </header>
         <div class="canvas-wrap">
@@ -198,12 +225,275 @@
             <p class="panel-subtitle">Track your learning journey across topics</p>
           </div>
           <button id="load-progress" class="btn-ghost">Refresh</button>
+          <button class="drawer-expand" title="Expand">&#x26F6;</button>
           <button class="drawer-close" title="Close">&times;</button>
         </header>
         <div id="progress-content" class="progress-content">
           <div class="empty-state">
             <div class="empty-icon">&#x1F4CA;</div>
             <p>No progress yet — take a quiz to get started!</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Robotics Tab (drawer) ─────────────────────── -->
+      <section id="robotics" class="panel drawer">
+        <header class="panel-header">
+          <div>
+            <h2>Robotics Studio</h2>
+            <p class="panel-subtitle">Advanced middle school robotics with strategy, debugging, and design tradeoffs</p>
+          </div>
+          <button class="drawer-expand" title="Expand">&#x26F6;</button>
+          <button class="drawer-close" title="Close">&times;</button>
+        </header>
+
+        <div class="subject-browser">
+          <section class="subject-hero">
+            <span class="subject-tag">Advanced Middle School</span>
+            <h3>Build smarter robots, not just faster ones.</h3>
+            <p>
+              Explore sensing, control logic, gearing, and test-driven problem solving with
+              challenges designed for students ready for more than beginner build guides.
+            </p>
+          </section>
+
+          <div class="subject-grid">
+            <article class="subject-card">
+              <h3>Sensors and Decisions</h3>
+              <p>Learn how a robot reads the world and makes choices from noisy input.</p>
+              <ul>
+                <li>Touch, color, distance, and gyro sensors</li>
+                <li>Thresholds, false readings, and calibration</li>
+                <li>Using conditionals to react reliably</li>
+              </ul>
+              <button class="btn-primary section-action" data-subject="Robotics" data-prompt="Teach me advanced middle school robotics concepts about sensors, calibration, and conditionals. Use a competition-style example and ask me a few reasoning questions.">
+                Launch Lesson
+              </button>
+            </article>
+
+            <article class="subject-card">
+              <h3>Movement and Mechanics</h3>
+              <p>Study how robot design choices affect speed, torque, and repeatability.</p>
+              <ul>
+                <li>Gear ratios and torque tradeoffs</li>
+                <li>Turning accuracy and wheel slip</li>
+                <li>Designing for consistency over one lucky run</li>
+              </ul>
+              <button class="btn-primary section-action" data-subject="Robotics" data-prompt="Give me an advanced robotics mini-lesson for middle school on gear ratios, torque, and accurate turning. Include one challenge problem and hints.">
+                Explore Mechanics
+              </button>
+            </article>
+
+            <article class="subject-card">
+              <h3>Debugging Missions</h3>
+              <p>Practice breaking a complex run into measurable steps and controlled tests.</p>
+              <ul>
+                <li>Testing one variable at a time</li>
+                <li>Recording evidence from each run</li>
+                <li>Improving code and build together</li>
+              </ul>
+              <button class="btn-primary section-action" data-subject="Robotics" data-prompt="Create an advanced middle school robotics debugging mission. My robot misses turns and bumps into objects. Walk me through a structured debugging process instead of giving the full answer immediately.">
+                Start Mission
+              </button>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Reading & Writing Tab (drawer) ────────────── -->
+      <section id="reading-writing" class="panel drawer">
+        <header class="panel-header">
+          <div>
+            <h2>Reading &amp; Writing Lab</h2>
+            <p class="panel-subtitle">Close reading, stronger analysis, and clearer writing for ambitious students</p>
+          </div>
+          <button class="drawer-expand" title="Expand">&#x26F6;</button>
+          <button class="drawer-close" title="Close">&times;</button>
+        </header>
+
+        <div class="subject-browser">
+          <section class="subject-hero">
+            <span class="subject-tag">Advanced Middle School</span>
+            <h3>Read with evidence. Write with purpose.</h3>
+            <p>
+              Build stronger interpretation, argument writing, and revision habits through
+              guided practice that pushes beyond basic comprehension.
+            </p>
+          </section>
+
+          <div class="subject-grid">
+            <article class="subject-card">
+              <h3>Close Reading</h3>
+              <p>Go beyond summary by analyzing tone, theme, and how evidence supports meaning.</p>
+              <ul>
+                <li>Main idea versus deeper theme</li>
+                <li>Inference from specific evidence</li>
+                <li>Author choices and their effect</li>
+              </ul>
+              <button class="btn-primary section-action" data-subject="Reading & Writing" data-prompt="Give me an advanced middle school close reading activity with a short passage. Ask questions about theme, tone, and evidence, then guide me through the answers.">
+                Practice Reading
+              </button>
+            </article>
+
+            <article class="subject-card">
+              <h3>Argument Writing</h3>
+              <p>Strengthen claims, evidence, and reasoning so each paragraph does real work.</p>
+              <ul>
+                <li>Claims that are specific and defensible</li>
+                <li>Evidence that actually proves the point</li>
+                <li>Reasoning and counterclaim structure</li>
+              </ul>
+              <button class="btn-primary section-action" data-subject="Reading & Writing" data-prompt="Teach me how to write an advanced middle school argument paragraph with claim, evidence, reasoning, and a counterclaim. Use a strong example and then quiz me.">
+                Build an Argument
+              </button>
+            </article>
+
+            <article class="subject-card">
+              <h3>Revision Workshop</h3>
+              <p>Improve clarity and style by revising with purpose instead of just fixing grammar.</p>
+              <ul>
+                <li>Sentence variety and transitions</li>
+                <li>Stronger verbs and precise wording</li>
+                <li>Editing for flow and clarity</li>
+              </ul>
+              <button class="btn-primary section-action" data-subject="Reading & Writing" data-prompt="Give me an advanced middle school writing revision workshop. Show a weak paragraph, help me revise it for clarity and style, and explain why each change helps.">
+                Revise a Draft
+              </button>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Worksheets Tab (drawer) ───────────────────── -->
+      <section id="worksheets" class="panel drawer">
+        <header class="panel-header">
+          <div>
+            <h2>Worksheets</h2>
+            <p class="panel-subtitle">Generate printable worksheets and submit answers for scoring</p>
+          </div>
+          <button class="drawer-expand" title="Expand">&#x26F6;</button>
+          <button class="drawer-close" title="Close">&times;</button>
+        </header>
+
+        <div class="worksheet-content">
+          <!-- Generate form -->
+          <div class="ws-setup-card">
+            <h3>Create a Worksheet</h3>
+            <div class="quiz-form-grid">
+              <label class="field">
+                <span>Topic</span>
+                <input id="ws-topic" type="text" placeholder="e.g. Fractions, Ecosystems" />
+              </label>
+              <label class="field">
+                <span># Questions</span>
+                <input id="ws-count" type="number" value="10" min="1" max="30" />
+              </label>
+              <label class="field">
+                <span>Difficulty</span>
+                <div class="difficulty-pills">
+                  <input type="radio" name="ws-diff" id="ws-diff-easy" value="easy" />
+                  <label for="ws-diff-easy" class="pill">Easy</label>
+                  <input type="radio" name="ws-diff" id="ws-diff-medium" value="medium" checked />
+                  <label for="ws-diff-medium" class="pill">Medium</label>
+                  <input type="radio" name="ws-diff" id="ws-diff-hard" value="hard" />
+                  <label for="ws-diff-hard" class="pill">Hard</label>
+                </div>
+              </label>
+            </div>
+            <div class="ws-actions">
+              <button id="generate-ws" class="btn-primary btn-lg">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                Generate Worksheet
+              </button>
+            </div>
+          </div>
+
+          <!-- Saved worksheets -->
+          <div class="ws-saved-section">
+            <h3>My Worksheets</h3>
+            <div id="ws-saved-list" class="ws-saved-list">
+              <p class="text-muted">No saved worksheets yet.</p>
+            </div>
+          </div>
+
+          <!-- Generated worksheet -->
+          <div id="ws-preview" class="ws-preview hidden">
+            <div class="ws-preview-header">
+              <h3 id="ws-preview-title"></h3>
+              <div class="ws-preview-actions">
+                <button id="ws-print" class="btn-ghost">&#x1F5A8; Print</button>
+                <button id="ws-print-key" class="btn-ghost">&#x1F511; Print with Answers</button>
+              </div>
+            </div>
+            <div id="ws-items"></div>
+          </div>
+
+          <!-- Score form -->
+          <div id="ws-score-section" class="ws-score-section hidden">
+            <h3>Submit Answers for Scoring</h3>
+            <div id="ws-answer-fields"></div>
+            <button id="ws-submit-score" class="btn-primary btn-lg">
+              Score My Worksheet
+            </button>
+          </div>
+
+          <!-- Results -->
+          <div id="ws-results" class="ws-results hidden"></div>
+        </div>
+      </section>
+
+      <!-- ── Profile Tab (drawer) ──────────────────────── -->
+      <section id="profile" class="panel drawer">
+        <header class="panel-header">
+          <div>
+            <h2>Learner Profile</h2>
+            <p class="panel-subtitle">Personalize your learning experience</p>
+          </div>
+          <button class="drawer-expand" title="Expand">&#x26F6;</button>
+          <button class="drawer-close" title="Close">&times;</button>
+        </header>
+
+        <div class="profile-content">
+          <form id="profile-form" class="profile-form">
+            <label class="field">
+              <span>Name</span>
+              <input id="profile-name" type="text" placeholder="Your name" />
+            </label>
+            <label class="field">
+              <span>Grade</span>
+              <input id="profile-grade" type="text" placeholder="e.g. 7th, 8th" />
+            </label>
+            <label class="field">
+              <span>Interests (comma-separated)</span>
+              <input id="profile-interests" type="text" placeholder="e.g. robotics, space, writing" />
+            </label>
+            <label class="field">
+              <span>Strengths (comma-separated)</span>
+              <input id="profile-strengths" type="text" placeholder="e.g. problem solving, creativity" />
+            </label>
+            <label class="field">
+              <span>Learning Pace</span>
+              <div class="difficulty-pills">
+                <input type="radio" name="pacing" id="pace-standard" value="standard" checked />
+                <label for="pace-standard" class="pill">Standard</label>
+                <input type="radio" name="pacing" id="pace-accelerated" value="accelerated" />
+                <label for="pace-accelerated" class="pill">Accelerated</label>
+                <input type="radio" name="pacing" id="pace-enriched" value="enriched" />
+                <label for="pace-enriched" class="pill">Enriched</label>
+              </div>
+            </label>
+            <button type="submit" class="btn-primary">Save Profile</button>
+          </form>
+
+          <div id="profile-mastery" class="profile-mastery">
+            <h3>Concept Mastery</h3>
+            <div id="mastery-grid" class="progress-grid"></div>
+          </div>
+
+          <div id="profile-recommendations" class="profile-recs">
+            <h3>Recommended Next Steps</h3>
+            <button id="load-recs" class="btn-ghost">Get Recommendations</button>
+            <div id="recs-list"></div>
           </div>
         </div>
       </section>

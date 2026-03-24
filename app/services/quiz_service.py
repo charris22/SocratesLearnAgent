@@ -4,8 +4,10 @@ import json
 import logging
 
 from app.azure_client import get_openai_client
+from app import database as db
 from app.config import get_settings
 from app.models import (
+    CognitiveLevel,
     Difficulty,
     QuizQuestion,
     QuizRequest,
@@ -15,9 +17,6 @@ from app.models import (
 from app.prompts import QUIZ_GENERATION_PROMPT
 
 logger = logging.getLogger(__name__)
-
-# In-memory quiz store  (question_id -> QuizQuestion)
-_questions: dict[str, QuizQuestion] = {}
 
 
 async def generate_quiz(request: QuizRequest) -> list[QuizQuestion]:
@@ -45,31 +44,66 @@ async def generate_quiz(request: QuizRequest) -> list[QuizQuestion]:
 
     questions: list[QuizQuestion] = []
     for item in data.get("questions", []):
+        # Parse cognitive level safely
+        cog_raw = item.get("cognitive_level", "application").lower()
+        try:
+            cog = CognitiveLevel(cog_raw)
+        except ValueError:
+            cog = CognitiveLevel.APPLICATION
+
         q = QuizQuestion(
             question=item["question"],
             choices=item["choices"],
             correct_index=item["correct_index"],
             explanation=item["explanation"],
             difficulty=request.difficulty,
+            concept=item.get("concept", request.topic),
+            cognitive_level=cog,
         )
-        _questions[q.id] = q
+        await db.save_quiz_question({
+            "id": q.id,
+            "question": q.question,
+            "choices": q.choices,
+            "correct_index": q.correct_index,
+            "explanation": q.explanation,
+            "difficulty": q.difficulty.value,
+            "concept": q.concept,
+            "cognitive_level": q.cognitive_level.value,
+        })
         questions.append(q)
 
     logger.info("Generated %d questions for %s / %s", len(questions), request.subject, request.topic)
     return questions
 
 
-def grade_answer(submission: QuizSubmission) -> QuizResult:
+async def grade_answer(submission: QuizSubmission) -> QuizResult:
     """Grade a single quiz answer."""
-    question = _questions.get(submission.question_id)
-    if question is None:
+    row = await db.get_quiz_question(submission.question_id)
+    if row is None:
         raise ValueError(f"Unknown question: {submission.question_id}")
 
+    question = QuizQuestion(
+        id=row["id"],
+        question=row["question"],
+        choices=row["choices"],
+        correct_index=row["correct_index"],
+        explanation=row["explanation"],
+        difficulty=Difficulty(row["difficulty"]),
+        concept=row.get("concept", ""),
+        cognitive_level=CognitiveLevel(row.get("cognitive_level", "application")),
+    )
+
     correct = submission.selected_index == question.correct_index
+
+    recommendation = ""
+    if not correct:
+        recommendation = f"Review the concept: {question.concept}. {question.explanation}"
 
     return QuizResult(
         question_id=submission.question_id,
         correct=correct,
         correct_index=question.correct_index,
         explanation=question.explanation,
-    )
+        concept=question.concept,
+        recommendation=recommendation,
+    ), question
